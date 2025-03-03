@@ -1,8 +1,10 @@
 import pandas as pd
 import numpy as np
-import re
+
 
 def correct_ph(df):
+
+    df = df.copy() #evitar fallas de vistas
 
     # Convertir los valores de la columna "pH" a float
     df.loc[:,"pH"] = pd.to_numeric(df["pH"], errors="coerce")
@@ -15,6 +17,8 @@ def correct_ph(df):
 
 def correct_phosphorus(value):
     try:
+        if pd.isna(value):
+            return np.nan
         value_str = str(int(value))  # Convertir a string eliminando decimales innecesarios
         
         if len(value_str) == 17:  
@@ -29,7 +33,9 @@ def correct_phosphorus(value):
         return np.nan  # Manejar cualquier error con NaN
 
 def correct_potassium(value):
-    
+
+    if pd.isna(value):
+        return np.nan  # Valores NaN se mantienen como NaN
     if (value < 0):
         return float(value * -1)
     elif(value > 0) and (value < 1):
@@ -52,6 +58,8 @@ def clean_data(df):
     df.loc[:,"Fosforo"] = df["Fosforo"].apply(correct_phosphorus)
     # Reemplazar los valores NaN con la mediana de los valores válidos
     phosphorus_median = df["Fosforo"].median()
+    if pd.isna(phosphorus_median):
+        phosphorus_median = 0  # Si la mediana es NaN, reemplazar con 0
     df.loc[:,"Fosforo"].fillna(phosphorus_median, inplace=True)
 
     # Convertir los valores de la columna "Potasio" a float
@@ -60,6 +68,8 @@ def clean_data(df):
     df.loc[:,"Potasio"] = df["Potasio"].apply(correct_potassium)
     # Reemplazar los valores NaN con la mediana de los valores válidos
     potassium_median = df["Potasio"].median()
+    if pd.isna(potassium_median):
+        potassium_median = 0  # Si la mediana es NaN, reemplazar con 0
     df.loc[:,"Potasio"].fillna(potassium_median, inplace=True)
 
     return df
