@@ -49,7 +49,5 @@ def filter_data(df, department, town, crop):
     return filter_df
 
 def calculate_medians(df):
-
     median_values = df[["pH", "Fosforo", "Potasio"]].median()
-
     return median_values

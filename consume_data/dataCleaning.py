@@ -22,7 +22,7 @@ def correct_phosphorus(value):
         elif len(value_str) == 16:  
             return float(value_str[:1] + "." + value_str[1:])  # 1 entero, el resto decimal
         elif len(value_str) == 15:  
-            return float("0." + value_str)
+            return float("0." + value_str) # 0 entero, el resto decimal
         else:  
             return np.nan  # Valores inválidos se convierten en NaN
     except:
